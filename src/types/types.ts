@@ -46,6 +46,7 @@ export interface Education {
 }
 
 export interface Contact {
+  type: string;
   id: string;
   profile_id: string;
   text: string;

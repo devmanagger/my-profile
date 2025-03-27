@@ -1,46 +1,26 @@
-import React, { useEffect, useRef } from 'react';
-import { Download, MapPin, Phone } from 'lucide-react';
-import { motion, useAnimation } from 'framer-motion';
-
-interface ContactInfo {
-  text: string;
-  icon: React.ReactNode;
-}
-
-const contactInfo: ContactInfo[] = [
-  {
-    text: "123 Tech Street, Silicon Valley, CA",
-    icon: <MapPin className="w-5 h-5" />,
-  },
-  {
-    text: "+1 (555) 123-4567",
-    icon: <Phone className="w-5 h-5" />,
-  },
-  {
-    text: "© 2024 John Doe. All rights reserved.",
-    icon: null,
-  },
-];
+import React, { useEffect, useRef } from "react";
+import { Download } from "lucide-react"; // Cambié los iconos según tus necesidades
+import { motion, useAnimation } from "framer-motion";
+import { useProfile } from "../context/ProfileContext";
 
 export const Footer: React.FC = () => {
+  const { contact } = useProfile();
   const sliderRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
 
   useEffect(() => {
     const animate = async () => {
-      while (true) {
-        await controls.start({
-          x: [0, -50, -100],
-          transition: {
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 20,
-              ease: "linear",
-            },
+      await controls.start({
+        x: [0, -50, -100],
+        transition: {
+          x: {
+            repeat: Infinity,
+            repeatType: "mirror",
+            duration: 10,
+            ease: "easeOut",
           },
-        });
-      }
+        },
+      });
     };
 
     animate();
@@ -63,19 +43,17 @@ export const Footer: React.FC = () => {
           <motion.div
             ref={sliderRef}
             animate={controls}
-            className="flex gap-8 whitespace-nowrap"
+            className="flex gap-8 whitespace-nowrap text-center"
           >
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex gap-8">
-                {contactInfo.map((info, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 text-gray-600 dark:text-gray-400"
-                  >
-                    {info.icon}
-                    <span>{info.text}</span>
-                  </div>
-                ))}
+            {contact.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col self-center items-center"
+              >
+                {/* Añadir el ícono dinámicamente */}
+                <p className="text-gray-900 dark:text-blue-950/100 font-medium mt-2">
+                  {item.text}
+                </p>
               </div>
             ))}
           </motion.div>
