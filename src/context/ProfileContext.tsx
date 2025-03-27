@@ -1,12 +1,29 @@
-// src/context/ProfileContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 
-import { Profile } from "../types/types";
+import {
+  Profile,
+  Contact,
+  Education,
+  Experience,
+  ProjectTechnology,
+} from "../types/types";
 import { fetchProfile } from "../services/profileService";
+import { fetchContact } from "../services/contactService";
+import { fetchEducation } from "../services/educationService";
+import { fetchExperience } from "../services/experienceService";
+import { fetchTechnologies } from "../services/tecnologiService";
 
 interface ProfileContextProps {
   profile: Profile | null;
   setProfile: (profile: Profile) => void;
+  contact: Contact[];
+  setContact: (contact: Contact[]) => void;
+  education: Education[];
+  setEducation: (education: Education[]) => void;
+  experience: Experience[];
+  setExperience: (experience: Experience[]) => void;
+  projectTechnologies: ProjectTechnology[];
+  setProjectTechnologies: (projectTechnologies: ProjectTechnology[]) => void;
 }
 
 const ProfileContext = createContext<ProfileContextProps | undefined>(
@@ -15,18 +32,49 @@ const ProfileContext = createContext<ProfileContextProps | undefined>(
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [contact, setContact] = useState<Contact[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [projectTechnologies, setProjectTechnologies] = useState<
+    ProjectTechnology[]
+  >([]);
 
   useEffect(() => {
-    const loadProfile = async () => {
+    const loadData = async () => {
       const profileData = await fetchProfile();
       setProfile(profileData);
+
+      const contactData = await fetchContact();
+      setContact(contactData);
+
+      const educationData = await fetchEducation();
+      setEducation(educationData);
+
+      const experienceData = await fetchExperience();
+      setExperience(experienceData);
+
+      const projectTechnologiesData = await fetchTechnologies();
+      setProjectTechnologies(projectTechnologiesData as any);
     };
 
-    loadProfile();
+    loadData();
   }, []);
 
   return (
-    <ProfileContext.Provider value={{ profile, setProfile }}>
+    <ProfileContext.Provider
+      value={{
+        profile,
+        setProfile,
+        contact,
+        setContact,
+        education,
+        setEducation,
+        experience,
+        setExperience,
+        projectTechnologies,
+        setProjectTechnologies,
+      }}
+    >
       {children}
     </ProfileContext.Provider>
   );

@@ -1,7 +1,7 @@
 // src/services/projectService.ts
 
 import { supabase } from "../lib/supabase";
-import { Project } from "../types";
+import { Project } from "../types/types";
 
 export const fetchProjects = async (): Promise<Project[]> => {
   const { data, error } = await supabase.from("projects").select("*");

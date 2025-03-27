@@ -1,23 +1,13 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { GraduationCap } from 'lucide-react';
-import { withSection } from '../hoc/withSection';
-import { Education as EducationType } from '../types';
+import React from "react";
+import { motion } from "framer-motion";
+import { GraduationCap } from "lucide-react";
+import { withSection } from "../hoc/withSection";
+import { useProfile } from "../context/ProfileContext";
 
-const education: EducationType[] = [
-  {
-    title: "Computer Science Degree",
-    institution: "Tech University",
-    period: "2018 - 2022",
-  },
-  {
-    title: "Web Development Bootcamp",
-    institution: "Code Academy",
-    period: "2021",
-  },
-];
+type SectionProps = {};
 
 const EducationContent: React.FC = () => {
+  const { education } = useProfile();
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -44,8 +34,8 @@ const EducationContent: React.FC = () => {
 
 export const Education = withSection<SectionProps>(
   EducationContent,
-  'education',
-  'Education',
+  "education",
+  "Education",
   <GraduationCap className="w-6 h-6" />,
-  'bg-black/5 dark:bg-blue-950/20 backdrop-blur-lg'
+  "bg-black/5 dark:bg-blue-950/20 backdrop-blur-lg"
 );
