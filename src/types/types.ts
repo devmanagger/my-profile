@@ -31,8 +31,12 @@ export interface Project {
 export interface ProjectTechnology {
   id: string;
   project_id: string;
-  name: string;
   created_at: string;
+  name: string;
+  icon: string;
+  color: string;
+  category: string;
+  skills: Skill[];
 }
 
 export interface Education {
@@ -65,12 +69,7 @@ export interface Experience {
   created_at: string;
   updated_at: string;
 }
-export interface Skill {
+interface Skill {
   name: string;
   icon: string;
-  color: string;
-}
-export interface SkillCategory {
-  title: string;
-  skills: Skill[];
 }

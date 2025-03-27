@@ -12,7 +12,7 @@ import { fetchProfile } from "../services/profileService";
 import { fetchContact } from "../services/contactService";
 import { fetchEducation } from "../services/educationService";
 import { fetchExperience } from "../services/experienceService";
-import { fetchTechnologies } from "../services/tecnologiService";
+import { fetchTechnologies } from "../services/tecnologiService"; // Aquí importamos fetchTechnologies
 import { fetchProjects } from "../services/projectService";
 
 interface ProfileContextProps {
@@ -41,27 +41,31 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [experience, setExperience] = useState<Experience[]>([]);
   const [projectTechnologies, setProjectTechnologies] = useState<
     ProjectTechnology[]
-  >([]);
+  >([]); // Agregado estado para projectTechnologies
 
   useEffect(() => {
     const loadData = async () => {
-      const profileData = await fetchProfile();
-      setProfile(profileData);
+      try {
+        const profileData = await fetchProfile();
+        setProfile(profileData);
 
-      const contactData = await fetchContact();
-      setContact(contactData);
+        const contactData = await fetchContact();
+        setContact(contactData);
 
-      const projectData = await fetchProjects();
-      setProject(projectData);
+        const projectData = await fetchProjects();
+        setProject(projectData);
 
-      const educationData = await fetchEducation();
-      setEducation(educationData);
+        const educationData = await fetchEducation();
+        setEducation(educationData);
 
-      const experienceData = await fetchExperience();
-      setExperience(experienceData);
+        const experienceData = await fetchExperience();
+        setExperience(experienceData);
 
-      const projectTechnologiesData = await fetchTechnologies();
-      setProjectTechnologies(projectTechnologiesData as any);
+        const projectTechnologiesData = await fetchTechnologies(); // Llamada al servicio
+        setProjectTechnologies(projectTechnologiesData); // Actualiza el estado con los datos de tecnologías
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
     };
 
     loadData();
@@ -79,8 +83,8 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         setEducation,
         experience,
         setExperience,
-        projectTechnologies,
-        setProjectTechnologies,
+        projectTechnologies, // Pasamos projectTechnologies al contexto
+        setProjectTechnologies, // Pasamos setProjectTechnologies al contexto
       }}
     >
       {children}

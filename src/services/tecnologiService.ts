@@ -1,23 +1,16 @@
 import { supabase } from "../lib/supabase";
 import { ProjectTechnology } from "../types/types";
 
-export const fetchTechnologies =
-  async (): Promise<ProjectTechnology | null> => {
-    const { data, error } = await supabase
-      .from("project_technologies")
-      .select("*")
-      .single();
-    if (error) throw error;
-    return data;
-  };
-
-export const insertProfile = async (
-  profile: ProjectTechnology
-): Promise<ProjectTechnology> => {
+// Función para obtener las tecnologías de proyecto
+export const fetchTechnologies = async (): Promise<ProjectTechnology[]> => {
   const { data, error } = await supabase
-    .from("profiles")
-    .insert([profile])
-    .single();
-  if (error) throw error;
-  return data;
+    .from("project_technologies") // Asegúrate de que el nombre de la tabla coincida con el de tu base de datos
+    .select("*");
+
+  if (error) {
+    console.error("Error fetching project technologies:", error);
+    return [];
+  }
+
+  return data as ProjectTechnology[];
 };
