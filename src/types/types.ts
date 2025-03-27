@@ -73,3 +73,9 @@ interface Skill {
   name: string;
   icon: string;
 }
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  created_at?: string;
+}

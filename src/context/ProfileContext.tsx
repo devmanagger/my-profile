@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-
 import {
   Profile,
   Contact,
@@ -7,13 +6,15 @@ import {
   Experience,
   ProjectTechnology,
   Project,
+  SocialLink,
 } from "../types/types";
 import { fetchProfile } from "../services/profileService";
 import { fetchContact } from "../services/contactService";
 import { fetchEducation } from "../services/educationService";
 import { fetchExperience } from "../services/experienceService";
-import { fetchTechnologies } from "../services/tecnologiService"; // Aquí importamos fetchTechnologies
+import { fetchTechnologies } from "../services/tecnologiService";
 import { fetchProjects } from "../services/projectService";
+import { socialLinksService } from "../services/socialLinksService"; // ✅ Importar servicio
 
 interface ProfileContextProps {
   project: Project[];
@@ -27,6 +28,10 @@ interface ProfileContextProps {
   setExperience: (experience: Experience[]) => void;
   projectTechnologies: ProjectTechnology[];
   setProjectTechnologies: (projectTechnologies: ProjectTechnology[]) => void;
+  socialLinks: SocialLink[];
+  setSocialLinks: (socialLinks: SocialLink[]) => void;
+  addSocialLink: (platform: string, url: string) => Promise<void>;
+  deleteSocialLink: (id: string) => Promise<void>;
 }
 
 const ProfileContext = createContext<ProfileContextProps | undefined>(
@@ -41,7 +46,8 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [experience, setExperience] = useState<Experience[]>([]);
   const [projectTechnologies, setProjectTechnologies] = useState<
     ProjectTechnology[]
-  >([]); // Agregado estado para projectTechnologies
+  >([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -61,8 +67,11 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         const experienceData = await fetchExperience();
         setExperience(experienceData);
 
-        const projectTechnologiesData = await fetchTechnologies(); // Llamada al servicio
-        setProjectTechnologies(projectTechnologiesData); // Actualiza el estado con los datos de tecnologías
+        const projectTechnologiesData = await fetchTechnologies();
+        setProjectTechnologies(projectTechnologiesData);
+
+        const socialLinksData = await socialLinksService.getSocialLinks(); // ✅ Cargar enlaces sociales
+        setSocialLinks(socialLinksData);
       } catch (error) {
         console.error("Error loading data:", error);
       }
@@ -70,6 +79,26 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
 
     loadData();
   }, []);
+
+  // ✅ Agregar un enlace social
+  const addSocialLink = async (platform: string, url: string) => {
+    try {
+      const newLink = await socialLinksService.addSocialLink(platform, url);
+      setSocialLinks((prev) => [...prev, newLink]);
+    } catch (error) {
+      console.error("Error adding social link:", error);
+    }
+  };
+
+  // ✅ Eliminar un enlace social
+  const deleteSocialLink = async (id: string) => {
+    try {
+      await socialLinksService.deleteSocialLink(id);
+      setSocialLinks((prev) => prev.filter((link) => link.id !== id));
+    } catch (error) {
+      console.error("Error deleting social link:", error);
+    }
+  };
 
   return (
     <ProfileContext.Provider
@@ -83,8 +112,12 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         setEducation,
         experience,
         setExperience,
-        projectTechnologies, // Pasamos projectTechnologies al contexto
-        setProjectTechnologies, // Pasamos setProjectTechnologies al contexto
+        projectTechnologies,
+        setProjectTechnologies,
+        socialLinks,
+        setSocialLinks,
+        addSocialLink, // ✅ Exponer función de agregar
+        deleteSocialLink, // ✅ Exponer función de eliminar
       }}
     >
       {children}

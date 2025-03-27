@@ -1,25 +1,15 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Briefcase } from 'lucide-react';
-import { withSection } from '../hoc/withSection';
-import { Experience as ExperienceType } from '../types';
+import React from "react";
+import { motion } from "framer-motion";
+import { Briefcase } from "lucide-react";
+import { withSection } from "../hoc/withSection";
+import { useProfile } from "../context/ProfileContext";
 
-const experiences: ExperienceType[] = [
-  {
-    title: "Frontend Developer",
-    company: "Tech Corp",
-    period: "2022 - Present",
-    description: "Developing responsive web applications using React and Next.js.",
-  },
-  {
-    title: "Junior Developer",
-    company: "Innovation Labs",
-    period: "2021 - 2022",
-    description: "Built mobile applications using React Native and Expo.",
-  },
-];
+type SectionProps = {
+  sectionRef: React.RefObject<HTMLDivElement>;
+};
 
 const ExperienceContent: React.FC = () => {
+  const { experience } = useProfile();
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -28,18 +18,20 @@ const ExperienceContent: React.FC = () => {
 
   return (
     <div className="space-y-12">
-      {experiences.map((exp, index) => (
+      {experience.map((item, index) => (
         <motion.div
           key={index}
           {...fadeInUp}
           className="relative pl-8 border-l-2 border-blue-500/30"
         >
           <div className="absolute w-4 h-4 bg-blue-500 rounded-full -left-[9px] top-0"></div>
-          <h3 className="text-xl font-semibold">{exp.title}</h3>
+          <h3 className="text-xl font-semibold">{item.title}</h3>
           <p className="text-gray-600 dark:text-blue-300/70 mb-2">
-            {exp.company} • {exp.period}
+            {item.company} • {item.period}
           </p>
-          <p className="text-gray-700 dark:text-blue-200/90">{exp.description}</p>
+          <p className="text-gray-700 dark:text-blue-200/90">
+            {item.description}
+          </p>
         </motion.div>
       ))}
     </div>
@@ -48,7 +40,7 @@ const ExperienceContent: React.FC = () => {
 
 export const Experience = withSection<SectionProps>(
   ExperienceContent,
-  'experience',
-  'Experience',
+  "experience",
+  "Experience",
   <Briefcase className="w-6 h-6" />
 );
