@@ -6,14 +6,17 @@ import {
   Education,
   Experience,
   ProjectTechnology,
+  Project,
 } from "../types/types";
 import { fetchProfile } from "../services/profileService";
 import { fetchContact } from "../services/contactService";
 import { fetchEducation } from "../services/educationService";
 import { fetchExperience } from "../services/experienceService";
 import { fetchTechnologies } from "../services/tecnologiService";
+import { fetchProjects } from "../services/projectService";
 
 interface ProfileContextProps {
+  project: Project[];
   profile: Profile | null;
   setProfile: (profile: Profile) => void;
   contact: Contact[];
@@ -31,6 +34,7 @@ const ProfileContext = createContext<ProfileContextProps | undefined>(
 );
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
+  const [project, setProject] = useState<Project[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [contact, setContact] = useState<Contact[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
@@ -46,6 +50,9 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
 
       const contactData = await fetchContact();
       setContact(contactData);
+
+      const projectData = await fetchProjects();
+      setProject(projectData);
 
       const educationData = await fetchEducation();
       setEducation(educationData);
@@ -63,6 +70,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ProfileContext.Provider
       value={{
+        project,
         profile,
         setProfile,
         contact,

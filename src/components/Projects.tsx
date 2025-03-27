@@ -1,110 +1,56 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Dialog } from '@headlessui/react';
-import { FolderGit, X, Globe2, Github, Smartphone, Globe } from 'lucide-react';
-import { withSection } from '../hoc/withSection';
-import { Project } from '../types';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Dialog } from "@headlessui/react";
+import { FolderGit, X, Globe2, Github, Smartphone, Globe } from "lucide-react";
+import { withSection } from "../hoc/withSection";
+import { Project } from "../types/types";
+import { useProfile } from "../context/ProfileContext";
 
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "Mobile App",
-    type: "mobile",
-    description:
-      "React Native app with Expo for iOS and Android. Features include real-time messaging, push notifications, and offline support.",
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    technologies: ["React Native", "Expo", "Firebase", "TypeScript"],
-    links: {
-      demo: "https://example.com",
-      github: "https://github.com",
-      appStore: "https://apps.apple.com",
-      playStore: "https://play.google.com",
-    },
-  },
-  {
-    id: 2,
-    title: "E-commerce Website",
-    type: "web",
-    description:
-      "Next.js website with dynamic routing and SSR. Includes cart management, payment processing, and admin dashboard.",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL"],
-    links: {
-      demo: "https://example.com",
-      github: "https://github.com",
-    },
-  },
-  {
-    id: 3,
-    title: "Task Management App",
-    type: "mobile",
-    description:
-      "A mobile app for managing tasks and projects with team collaboration features.",
-    image:
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    technologies: ["React Native", "Redux", "Node.js", "MongoDB"],
-    links: {
-      demo: "https://example.com",
-      github: "https://github.com",
-      appStore: "https://apps.apple.com",
-      playStore: "https://play.google.com",
-    },
-  },
-  {
-    id: 4,
-    title: "Portfolio Website",
-    type: "web",
-    description:
-      "A modern portfolio website built with React and Framer Motion for smooth animations.",
-    image:
-      "https://images.unsplash.com/photo-1487014679447-9f8336841d58?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    technologies: ["React", "Framer Motion", "Tailwind CSS", "TypeScript"],
-    links: {
-      demo: "https://example.com",
-      github: "https://github.com",
-    },
-  },
-];
+type SectionProps = /*unresolved*/ any;
 
 const ProjectsContent: React.FC = () => {
-  const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
-  const [selectedType, setSelectedType] = React.useState<'all' | 'web' | 'mobile'>('all');
+  const { project } = useProfile();
+  const [selectedProject, setSelectedProject] = React.useState<Project | null>(
+    null
+  );
+  const [selectedType, setSelectedType] = React.useState<
+    "all" | "web" | "mobile"
+  >("all");
 
-  const filteredProjects = selectedType === 'all' 
-    ? projects 
-    : projects.filter(project => project.type === selectedType);
+  const filteredProjects =
+    selectedType === "all"
+      ? project
+      : project.filter((project) => project.type === selectedType);
 
   return (
     <>
       <div className="flex justify-center gap-4 mb-8">
         <button
-          onClick={() => setSelectedType('all')}
+          onClick={() => setSelectedType("all")}
           className={`px-4 py-2 rounded-lg transition-all ${
-            selectedType === 'all'
-              ? 'bg-blue-600 text-white'
-              : 'bg-black/5 dark:bg-blue-950/20 text-gray-700 dark:text-blue-200/90'
+            selectedType === "all"
+              ? "bg-blue-600 text-white"
+              : "bg-black/5 dark:bg-blue-950/20 text-gray-700 dark:text-blue-200/90"
           }`}
         >
           All Projects
         </button>
         <button
-          onClick={() => setSelectedType('web')}
+          onClick={() => setSelectedType("web")}
           className={`px-4 py-2 rounded-lg transition-all ${
-            selectedType === 'web'
-              ? 'bg-blue-600 text-white'
-              : 'bg-black/5 dark:bg-blue-950/20 text-gray-700 dark:text-blue-200/90'
+            selectedType === "web"
+              ? "bg-blue-600 text-white"
+              : "bg-black/5 dark:bg-blue-950/20 text-gray-700 dark:text-blue-200/90"
           }`}
         >
           Web Apps
         </button>
         <button
-          onClick={() => setSelectedType('mobile')}
+          onClick={() => setSelectedType("mobile")}
           className={`px-4 py-2 rounded-lg transition-all ${
-            selectedType === 'mobile'
-              ? 'bg-blue-600 text-white'
-              : 'bg-black/5 dark:bg-blue-950/20 text-gray-700 dark:text-blue-200/90'
+            selectedType === "mobile"
+              ? "bg-blue-600 text-white"
+              : "bg-black/5 dark:bg-blue-950/20 text-gray-700 dark:text-blue-200/90"
           }`}
         >
           Mobile Apps
@@ -123,14 +69,14 @@ const ProjectsContent: React.FC = () => {
             className="group relative overflow-hidden rounded-xl cursor-pointer bg-black/5 dark:bg-blue-950/20"
           >
             <img
-              src={project.image}
+              src={project.image_url}
               alt={project.title}
               className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className="absolute bottom-0 p-6">
                 <div className="flex items-center gap-2 mb-2">
-                  {project.type === 'web' ? (
+                  {project.type === "web" ? (
                     <Globe className="w-5 h-5 text-blue-400" />
                   ) : (
                     <Smartphone className="w-5 h-5 text-blue-400" />
@@ -170,7 +116,7 @@ const ProjectsContent: React.FC = () => {
               >
                 <div className="relative">
                   <img
-                    src={selectedProject.image}
+                    src={selectedProject.image_url}
                     alt={selectedProject.title}
                     className="w-full h-64 object-cover rounded-lg mb-6"
                   />
@@ -183,12 +129,14 @@ const ProjectsContent: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 mb-4">
-                  {selectedProject.type === 'web' ? (
+                  {selectedProject.type === "web" ? (
                     <Globe className="w-6 h-6 text-blue-500" />
                   ) : (
                     <Smartphone className="w-6 h-6 text-blue-500" />
                   )}
-                  <h3 className="text-2xl font-bold">{selectedProject.title}</h3>
+                  <h3 className="text-2xl font-bold">
+                    {selectedProject.title}
+                  </h3>
                 </div>
 
                 <p className="text-gray-700 dark:text-blue-200/90 mb-6">
@@ -198,12 +146,12 @@ const ProjectsContent: React.FC = () => {
                 <div className="mb-6">
                   <h4 className="text-lg font-semibold mb-2">Technologies</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedProject.technologies.map((tech) => (
+                    {project.map((tech, index) => (
                       <span
-                        key={tech}
+                        key={index}
                         className="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 text-sm"
                       >
-                        {tech}
+                        {tech.github_url}
                       </span>
                     ))}
                   </div>
@@ -211,7 +159,7 @@ const ProjectsContent: React.FC = () => {
 
                 <div className="flex flex-wrap gap-4">
                   <a
-                    href={selectedProject.links.demo}
+                    href={selectedProject.demo_url as any}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
@@ -220,7 +168,7 @@ const ProjectsContent: React.FC = () => {
                     Live Demo
                   </a>
                   <a
-                    href={selectedProject.links.github}
+                    href={selectedProject.github_url as any}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-blue-900/50 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-blue-800/50 transition-colors"
@@ -240,7 +188,7 @@ const ProjectsContent: React.FC = () => {
 
 export const Projects = withSection<SectionProps>(
   ProjectsContent,
-  'projects',
-  'Projects',
+  "projects",
+  "Projects",
   <FolderGit className="w-6 h-6" />
 );
